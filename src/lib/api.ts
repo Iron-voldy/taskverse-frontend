@@ -27,11 +27,10 @@ async function getSessionToken(): Promise<string | null> {
   if (_sessionTokenPromise) return _sessionTokenPromise
   _sessionTokenPromise = (async () => {
     try {
-      const res = await fetch('/api/auth/session')
+      const res = await fetch('/api/token')
       if (!res.ok) return null
-      const session = await res.json() as Record<string, unknown>
-      const user = session?.user as Record<string, unknown> | undefined
-      _sessionToken = (user?.accessToken as string) ?? null
+      const data = await res.json() as Record<string, unknown>
+      _sessionToken = (data?.accessToken as string) ?? null
       return _sessionToken
     } catch {
       return null
