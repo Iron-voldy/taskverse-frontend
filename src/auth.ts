@@ -42,7 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const res = await fetch(`${API}/auth/google`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: account.id_token }),
+            body: JSON.stringify({ idToken: account.id_token }),
           })
           if (res.ok) {
             const { user: dbUser, token: accessToken } = await res.json()

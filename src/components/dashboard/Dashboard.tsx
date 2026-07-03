@@ -71,7 +71,7 @@ export function Dashboard() {
             key={stat.label}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
+            transition={{ delay: i * 0.04 }}
             className="glass rounded-2xl p-4"
           >
             <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center mb-3`}>
@@ -88,7 +88,7 @@ export function Dashboard() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.1 }}
           className="glass rounded-2xl p-5 gradient-border"
         >
           <div className="flex items-center justify-between mb-3">
@@ -104,7 +104,7 @@ export function Dashboard() {
               style={{ background: 'linear-gradient(90deg, #ff4d00, #ff8c00)' }}
               initial={{ width: 0 }}
               animate={{ width: `${xpPct}%` }}
-              transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
             />
           </div>
           <p className="text-xs text-white/30 mt-2">Complete tasks to earn XP and level up</p>
@@ -114,7 +114,7 @@ export function Dashboard() {
       {/* Calendar + Upcoming side by side on large screens */}
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         {/* Calendar */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
           <div className="flex items-center gap-2 mb-4">
             <CalendarDays className="w-4 h-4 text-[#ff4d00]" />
             <h2 className="font-bold text-lg">Task Calendar</h2>
@@ -123,7 +123,7 @@ export function Dashboard() {
         </motion.div>
 
         {/* Upcoming tasks */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-lg">Upcoming</h2>
             <Link href="/app/tasks" className="text-sm transition-colors" style={{ color: '#ff4d00' }}>
@@ -134,9 +134,9 @@ export function Dashboard() {
             {upcoming.map((task, i) => (
               <motion.div
                 key={task._id}
-                initial={{ opacity: 0, x: 8 }}
+                initial={{ opacity: 0, x: 6 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + i * 0.06 }}
+                transition={{ delay: 0.18 + i * 0.04 }}
               >
                 <TaskCard task={task} variant="card" onComplete={() => handleComplete(task._id)} />
               </motion.div>

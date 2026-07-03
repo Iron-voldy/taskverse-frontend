@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Settings, User, Bell, Shield, Loader2, Mail, Flame, Sparkles, Check } from 'lucide-react'
 import { toast } from 'sonner'
+import { useSession } from 'next-auth/react'
 import { useUserStore } from '@/store/useUserStore'
 import { usersApi } from '@/lib/api'
 import { getLevelTitle, getXpProgress } from '@/lib/utils'
@@ -83,8 +84,14 @@ function NotifRow({
 
 export function SettingsPage() {
   const { user, fetchMe } = useUserStore()
-  const [name, setName] = useState(user?.name ?? '')
+  const { data: session } = useSession()
+  const [name, setName] = useState(user?.name ?? session?.user?.name ?? '')
   const [loading, setLoading] = useState(false)
+
+  // Sync name field when user loads from backend
+  useEffect(() => {
+    if (user?.name) setName(user.name)
+  }, [user?.name])
 
   const defaultPrefs: NotificationPrefs = { dailyDigest: true, streakReminder: true, planCreated: true }
   const [prefs, setPrefs] = useState<NotificationPrefs>(user?.notificationPrefs ?? defaultPrefs)
@@ -145,7 +152,7 @@ export function SettingsPage() {
           </div>
           <div>
             <label className="text-xs text-white/40 block mb-1.5">Email</label>
-            <input value={user?.email ?? ''} disabled className="input-field opacity-50 cursor-not-allowed" />
+            <input value={user?.email ?? session?.user?.email ?? ''} disabled className="input-field opacity-50 cursor-not-allowed" />
           </div>
           <button type="submit" disabled={loading} className="btn-primary flex items-center gap-2">
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -156,7 +163,7 @@ export function SettingsPage() {
 
       {/* XP & Level */}
       {user && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-2xl p-6">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-2xl p-6">
           <div className="flex items-center gap-2 mb-6">
             <Shield className="w-4 h-4 text-amber-400" />
             <h2 className="font-bold">Progress</h2>
@@ -191,7 +198,7 @@ export function SettingsPage() {
       )}
 
       {/* Email Notifications */}
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass rounded-2xl p-6">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-2xl p-6">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
           <Bell style={{ width: '1rem', height: '1rem', color: '#ff4d00' }} />
           <h2 className="font-bold">Email Notifications</h2>
@@ -204,7 +211,7 @@ export function SettingsPage() {
           </span>
         </div>
         <p style={{ fontSize: '0.78rem', color: 'rgba(238,232,222,0.38)', marginBottom: '0.25rem' }}>
-          Emails are sent to <strong style={{ color: '#eee8de' }}>{user?.email}</strong>
+          Emails are sent to <strong style={{ color: '#eee8de' }}>{user?.email ?? session?.user?.email}</strong>
         </p>
 
         <div style={{ marginTop: '0.5rem' }}>
