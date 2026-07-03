@@ -58,7 +58,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.id = token.userId as string
       // Store in session.user — NextAuth v5 only serializes session.user.* to the
       // /api/auth/session JSON response; root-level additions are silently dropped.
-      ;(session.user as Record<string, unknown>).accessToken = token.accessToken
+      ;(session.user as unknown as Record<string, unknown>).accessToken = token.accessToken
       return session
     },
   },
