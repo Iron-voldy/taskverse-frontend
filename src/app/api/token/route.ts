@@ -1,12 +1,24 @@
 import { auth } from '@/auth'
 import { NextResponse } from 'next/server'
 
-// Server-side token endpoint — uses auth() which reads the full encrypted JWT.
-// The /api/auth/session client endpoint in NextAuth v5 beta does not reliably
-// expose custom fields added to session.user, so we use this instead.
 export async function GET() {
-  const session = await auth()
-  const accessToken = (session?.user as Record<string, unknown>)?.accessToken as string | undefined
-  if (!accessToken) return NextResponse.json({ accessToken: null }, { status: 200 })
-  return NextResponse.json({ accessToken })
+  try {
+    const session = await auth()
+    console.log('[/api/token] session:', JSON.stringify(session, null, 2))
+
+    if (!session) {
+      console.log('[/api/token] NO SESSION — user not authenticated')
+      return NextResponse.json({ accessToken: null, debug: 'no_session' }, { status: 200 })
+    }
+
+    const user = session.user as unknown as Record<string, unknown>
+    const accessToken = user?.accessToken as string | undefined
+    console.log('[/api/token] session.user keys:', Object.keys(user ?? {}))
+    console.log('[/api/token] accessToken present:', !!accessToken)
+
+    return NextResponse.json({ accessToken: accessToken ?? null })
+  } catch (err) {
+    console.error('[/api/token] error:', err)
+    return NextResponse.json({ accessToken: null, debug: String(err) }, { status: 200 })
+  }
 }

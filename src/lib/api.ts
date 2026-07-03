@@ -28,11 +28,15 @@ async function getSessionToken(): Promise<string | null> {
   _sessionTokenPromise = (async () => {
     try {
       const res = await fetch('/api/token')
+      console.log('[getSessionToken] /api/token status:', res.status)
       if (!res.ok) return null
       const data = await res.json() as Record<string, unknown>
+      console.log('[getSessionToken] /api/token response:', JSON.stringify(data))
       _sessionToken = (data?.accessToken as string) ?? null
+      console.log('[getSessionToken] token set:', !!_sessionToken)
       return _sessionToken
-    } catch {
+    } catch (err) {
+      console.error('[getSessionToken] error:', err)
       return null
     } finally {
       _sessionTokenPromise = null
@@ -48,6 +52,7 @@ export function clearSessionCache() {
 
 api.interceptors.request.use(async (config) => {
   const token = await getSessionToken()
+  console.log('[axios interceptor]', config.method?.toUpperCase(), config.url, '| token:', token ? token.slice(0, 20) + '...' : 'NONE')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
