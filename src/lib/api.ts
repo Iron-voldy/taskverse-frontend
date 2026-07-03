@@ -57,9 +57,9 @@ api.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401) {
       _sessionToken = null
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login'
-      }
+      // Do NOT auto-redirect here — the app layout's auth() handles session expiry.
+      // Redirecting without signOut() causes a loop: session cookie stays valid so
+      // auth() renders the app, fetchMe() fires again, 401 again, redirect again.
     }
     return Promise.reject(err)
   },

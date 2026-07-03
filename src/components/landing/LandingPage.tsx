@@ -58,6 +58,8 @@ function Cursor() {
   const dot = useRef<HTMLDivElement>(null)
   const ring = useRef<HTMLDivElement>(null)
   useEffect(() => {
+    // Don't show custom cursor on touch devices
+    if (window.matchMedia('(hover: none)').matches) return
     let rx = 0, ry = 0, mx = 0, my = 0
     const move = (e: MouseEvent) => { mx = e.clientX; my = e.clientY }
     window.addEventListener('mousemove', move)
@@ -220,7 +222,7 @@ function Nav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-[200]"
       style={{
-        padding: '1.4rem 3rem',
+        padding: '1.4rem clamp(1rem, 5vw, 3rem)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         borderBottom: scrolled ? `1px solid ${C.rule}` : '1px solid transparent',
         background: scrolled ? 'rgba(5,5,5,0.9)' : 'transparent',
@@ -261,7 +263,7 @@ function Nav() {
         </Link>
       </div>
       {/* Mobile hamburger */}
-      <button className="md:hidden" style={{ background: 'none', border: 'none', color: C.text, cursor: 'none', fontSize: '1.2rem' }} onClick={() => setOpen(!open)}>
+      <button className="md:hidden" style={{ background: 'none', border: 'none', color: C.text, fontSize: '1.2rem' }} onClick={() => setOpen(!open)}>
         {open ? '✕' : '☰'}
       </button>
       {open && (
@@ -392,7 +394,7 @@ export function LandingPage() {
   })
 
   return (
-    <div ref={containerRef} style={{ background: C.bg, color: C.text, minHeight: '100vh', overflowX: 'hidden', cursor: 'none' }}>
+    <div ref={containerRef} style={{ background: C.bg, color: C.text, minHeight: '100vh', overflowX: 'hidden' }} className="[&_*]:cursor-auto md:[cursor:none] md:[&_*]:cursor-none">
       <style>{GSAP_INIT_STYLE}</style>
       {/* WebGL donut — fixed behind everything */}
       <DonutCanvas />
@@ -407,7 +409,7 @@ export function LandingPage() {
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* SEC 1 — HERO                                                   */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <section id="sec-1" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '7rem 3rem 3rem', position: 'relative', zIndex: 10 }}>
+      <section id="sec-1" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '7rem clamp(1rem,5vw,3rem) 3rem', position: 'relative', zIndex: 10 }}>
         {/* No background — canvas shows through here */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '2vh' }}>
           {/* Topic label */}
@@ -549,9 +551,9 @@ export function LandingPage() {
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* SEC 3 — HOW IT WORKS                                           */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <section id="sec-3" style={sectionStyle({ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '100vh' })}>
+      <section id="sec-3" style={sectionStyle({ minHeight: '100vh' })} className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left — text */}
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'clamp(4rem,8vh,7rem) clamp(3rem,5vw,5rem)', borderRight: `1px solid ${C.rule}` }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'clamp(3rem,8vh,7rem) clamp(1.5rem,5vw,5rem)' }} className="lg:border-r lg:[border-right:1px_solid_rgba(255,255,255,0.06)]">
           <SecNum n="02 / 04" />
           <STag>How it works</STag>
           <h2 className="s-h2" style={{ fontSize: 'clamp(2rem,3.5vw,3.2rem)', fontWeight: 800, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
@@ -579,7 +581,7 @@ export function LandingPage() {
         </div>
 
         {/* Right — terminal */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem 3rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(2rem,5vw,4rem) clamp(1.5rem,4vw,3rem)' }}>
           <div style={{ width: '100%', maxWidth: 440, border: `1px solid ${C.rule}`, padding: '2rem', fontFamily: C.mono, fontSize: '0.72rem', lineHeight: 2.2, background: 'rgba(0,0,0,0.5)' }}>
             <div style={{ color: 'rgba(255,77,0,0.5)', fontSize: '0.56rem', letterSpacing: '0.25em', marginBottom: '1.5rem', borderBottom: `1px solid ${C.rule}`, paddingBottom: '1rem' }}>
               TASKVERSE · GENUI ENGINE · v2.0 · LIVE
@@ -611,9 +613,9 @@ export function LandingPage() {
       {/* ══════════════════════════════════════════════════════════════ */}
       {/* SEC 4 — COMPONENT CATALOG                                      */}
       {/* ══════════════════════════════════════════════════════════════ */}
-      <section id="sec-4" style={sectionStyle({ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '80vh' })}>
+      <section id="sec-4" style={sectionStyle({ minHeight: '80vh' })} className="grid grid-cols-1 lg:grid-cols-2">
         {/* Right side gets content, left is visual */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem 3rem', borderRight: `1px solid ${C.rule}`, flexWrap: 'wrap', gap: '0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(2rem,5vw,4rem) clamp(1.5rem,4vw,3rem)', flexWrap: 'wrap', gap: '0' }} className="lg:border-r lg:[border-right:1px_solid_rgba(255,255,255,0.06)]">
           {[
             { name: 'TaskCard', icon: '☑️' },
             { name: 'KanbanBoard', icon: '📋' },
@@ -628,7 +630,7 @@ export function LandingPage() {
             { name: 'TaskList', icon: '📝' },
           ].map(({ name, icon }) => (
             <div key={name}
-              style={{ width: '50%', padding: '1.2rem 0', borderBottom: `1px solid ${C.rule}`, display: 'flex', alignItems: 'center', gap: '0.8rem' }}
+              style={{ width: '50%', padding: '1rem 0.5rem', borderBottom: `1px solid ${C.rule}`, display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0 }}
               onMouseEnter={e => { (e.currentTarget.querySelector('.comp-name') as HTMLElement).style.color = C.orange }}
               onMouseLeave={e => { (e.currentTarget.querySelector('.comp-name') as HTMLElement).style.color = C.dim }}>
               <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>{icon}</span>
@@ -637,7 +639,7 @@ export function LandingPage() {
           ))}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'clamp(4rem,8vh,7rem) clamp(3rem,5vw,5rem)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'clamp(3rem,8vh,7rem) clamp(1.5rem,5vw,5rem)' }}>
           <SecNum n="03 / 04" />
           <STag>Component Catalog</STag>
           <h2 className="s-h2" style={{ fontSize: 'clamp(2rem,3.5vw,3.2rem)', fontWeight: 800, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
@@ -676,14 +678,14 @@ export function LandingPage() {
       {/* ══════════════════════════════════════════════════════════════ */}
       <section id="sec-5" style={sectionStyle()}>
         {/* Stats row */}
-        <div style={{ borderBottom: `1px solid ${C.rule}`, display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }}>
+        <div style={{ borderBottom: `1px solid ${C.rule}` }} className="grid grid-cols-2 md:grid-cols-4">
           {[
             { n: '11', l: 'AI Components' },
             { n: '2K+', l: 'Active Users' },
             { n: '99%', l: 'Uptime SLA' },
             { n: '480ms', l: 'Avg Gen Time' },
           ].map(({ n, l }) => (
-            <div key={l} className="rev-up" style={{ padding: '3rem 2rem', borderRight: `1px solid ${C.rule}`, textAlign: 'center', opacity: 0, transform: 'translateY(20px)' }}>
+            <div key={l} className="rev-up" style={{ padding: 'clamp(1.5rem,4vw,3rem) clamp(1rem,3vw,2rem)', borderRight: `1px solid ${C.rule}`, textAlign: 'center', opacity: 0, transform: 'translateY(20px)' }}>
               <div style={{ fontSize: 'clamp(2rem,4vw,3.5rem)', fontWeight: 900, color: C.orange, lineHeight: 1 }}>{n}</div>
               <div style={{ fontFamily: C.mono, fontSize: '0.56rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginTop: '0.6rem' }}>{l}</div>
             </div>
@@ -691,7 +693,7 @@ export function LandingPage() {
         </div>
 
         {/* CTA */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: 'clamp(5rem,12vh,9rem) 3rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: 'clamp(3rem,12vh,9rem) clamp(1rem,5vw,3rem)' }}>
           <STag cls="s-tag">Get started free</STag>
           <h2 className="s-h2" style={{ fontSize: 'clamp(2.4rem,5vw,5.5rem)', fontWeight: 900, lineHeight: 0.9, letterSpacing: '-0.03em', textTransform: 'uppercase', marginBottom: '1.8rem', maxWidth: '18ch' }}>
             Build your<br />
@@ -723,7 +725,7 @@ export function LandingPage() {
       </section>
 
       {/* ─── Footer ── */}
-      <footer style={{ position: 'relative', zIndex: 10, background: C.sectionBg, borderTop: `1px solid ${C.rule}`, padding: '2rem 3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      <footer style={{ position: 'relative', zIndex: 10, background: C.sectionBg, borderTop: `1px solid ${C.rule}`, padding: '2rem clamp(1rem,5vw,3rem)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <span style={{ fontFamily: C.mono, fontSize: '0.56rem', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.18)', textTransform: 'uppercase' }}>
           TASKVERSE / {new Date().getFullYear()} · GENERATIVE UI PLATFORM
         </span>

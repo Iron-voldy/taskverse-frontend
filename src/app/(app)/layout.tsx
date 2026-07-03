@@ -12,7 +12,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <main className="flex-1 overflow-y-auto bg-surface-950">
         <AppInit />
-        <div className="max-w-6xl mx-auto p-6">
+        {/* pt-14 on mobile for the fixed top bar, none on md+ */}
+        <div className="max-w-6xl mx-auto p-4 pt-16 md:pt-6 md:p-6">
           {children}
         </div>
       </main>
