@@ -50,7 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const res = await fetch(`${API}/auth/google`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idToken: account.id_token }),
+            body: JSON.stringify({ token: account.id_token }),
           })
           console.log('[auth] google auth status:', res.status)
           if (res.ok) {
