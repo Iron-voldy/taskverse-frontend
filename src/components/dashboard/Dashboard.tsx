@@ -48,7 +48,7 @@ export function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">
-            Good {getGreeting()},{' '}
+            Good <span suppressHydrationWarning>{getGreeting()}</span>,{' '}
             <span className="gradient-text">{user?.name?.split(' ')[0] ?? 'there'}</span> 👋
           </h1>
           <p className="text-white/40 text-sm mt-1">Here&apos;s what&apos;s on your plate today</p>

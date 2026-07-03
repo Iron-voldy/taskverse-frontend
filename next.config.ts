@@ -1,12 +1,12 @@
 import type { NextConfig } from 'next'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
-const API_HOST = (() => { try { return new URL(API_URL).host } catch { return 'localhost:3001' } })()
+// Direct VPS URL used only server-side (NextAuth authorize, Google callback)
+const BACKEND_URL = process.env.BACKEND_URL ?? 'http://localhost:3001'
 
 const ContentSecurityPolicy = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-  `connect-src 'self' https://${API_HOST} ${API_URL} https://accounts.google.com`,
+  "connect-src 'self' https://accounts.google.com",
   "img-src 'self' data: blob: https://lh3.googleusercontent.com https://avatars.githubusercontent.com",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
@@ -14,7 +14,6 @@ const ContentSecurityPolicy = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  "upgrade-insecure-requests",
 ].join('; ')
 
 const nextConfig: NextConfig = {
@@ -26,6 +25,15 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
       { protocol: 'https', hostname: 'avatars.githubusercontent.com' },
     ],
+  },
+  // Proxy all /backend/* calls server-side to the VPS — solves mixed-content (HTTPS→HTTP) issue
+  async rewrites() {
+    return [
+      {
+        source: '/backend/:path*',
+        destination: `${BACKEND_URL}/:path*`,
+      },
+    ]
   },
   async headers() {
     return [

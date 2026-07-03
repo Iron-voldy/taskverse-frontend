@@ -1,7 +1,11 @@
 import axios from 'axios'
 import type { Task, TaskList, Canvas, User } from '@/types'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+// In the browser, route through /backend (Vercel proxy) to avoid mixed-content blocks.
+// Server-side (SSR) can reach the VPS directly, but client JS cannot (HTTP from HTTPS page).
+const API_URL = typeof window === 'undefined'
+  ? (process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001')
+  : '/backend'
 
 export const api = axios.create({
   baseURL: API_URL,

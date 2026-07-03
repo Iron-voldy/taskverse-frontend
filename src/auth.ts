@@ -2,7 +2,8 @@ import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 import Credentials from 'next-auth/providers/credentials'
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+// Server-only: used in NextAuth callbacks (never sent to browser)
+const API = process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
